@@ -1,0 +1,3 @@
+rootProject.name = 'azkaban_samples'
+include 'simple-java'
+

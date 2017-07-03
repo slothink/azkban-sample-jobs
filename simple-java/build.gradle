@@ -1,0 +1,46 @@
+group 'world.sai.azkaban_samples'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+gradle.taskGraph.beforeTask { Task task ->
+    println "executing $task ..."
+}
+
+gradle.taskGraph.afterTask { Task task, TaskState state ->
+    if (state.failure) {
+        println "FAILED"
+    }
+    else {
+        println "done"
+    }
+}
+
+dependencies {
+
+}
+
+assemble.doLast {
+    copy {
+        from 'build/libs'
+        into 'build/azkaban'
+        include '*.*'
+    }
+    copy {
+        from 'src/main/azkaban'
+        into 'build/azkaban'
+        include '*.*'
+    }
+
+    ant.zip(destfile: 'build/dist/simple-java.zip') {
+        fileset(dir: 'build/azkaban') {
+            include(name: '*.*')
+        }
+    }
+}

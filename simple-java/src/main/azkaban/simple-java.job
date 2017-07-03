@@ -1,0 +1,2 @@
+type=javaprocess
+java.class=world.sai.azkaban_samples.simple_java.SimpleJavaApplication
