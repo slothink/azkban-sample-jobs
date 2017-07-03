@@ -1,4 +1,5 @@
 rootProject.name = 'azkaban_samples'
 include 'simple-java'
 include 'simple-spring-boot'
+include 'javaprocess-spring-boot'
 

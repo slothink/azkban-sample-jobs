@@ -1,0 +1,89 @@
+group 'world.sai.azkaban_samples'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task copyRuntimeLibs(type: Copy) {
+//    outputs.upToDateWhen { false }
+    into "build/azkaban"
+    from configurations.runtime
+
+    doLast {
+        println 'copyRuntimeLibs'
+    }
+}
+
+//task copy
+
+task copyFiles(dependsOn: [copyRuntimeLibs, build]) {
+    copy {
+        from 'src/main/azkaban'
+        into 'build/azkaban'
+        include '*.*'
+    }
+    tasks.copyRuntimeLibs.execute()
+}
+
+
+
+task makeAzkabanJob(type: Zip, dependsOn: [copyFiles]) {
+//    outputs.upToDateWhen { false }
+//    doLast {
+    //    dependsOn build
+    //dependsOn copyRuntimeLibs
+
+    //    ext.srcFile = file('mountains.xml')
+    //    ext.destDir = new File(buildDir, 'generated')
+    //    inputs.file srcFile
+    //    outputs.dir destDir
+
+
+    //    tasks.copyRuntimeLibs.execute()
+
+
+
+//        copy {
+//            into "build/runtime-libs"
+//            from configurations.runtime
+//
+//            copy {
+//                from 'build/runtime-libs'
+//                into 'build/azkaban'
+//                include '*.*'
+//                include '*'
+//            }
+//        }
+
+//        copy {
+//            from 'build/libs'
+//            into 'build/azkaban'
+//            include 'zelda-batch-0.0.1-SNAPSHOT.jar.original'
+//            rename ('zelda-batch-0.0.1-SNAPSHOT.jar.original', 'zelda-batch-0.0.1-SNAPSHOT.jar')
+//        }
+
+    from 'build/azkaban'
+    include '*'
+    include "**/*"
+//    into 'build'
+//    destinationDir 'build'
+    archiveName 'zelda-batch-2.zip'
+    //
+    //        doLast {
+    //            println 'makeAzkabanJob'
+    //        }
+
+//    }
+
+
+
+}
