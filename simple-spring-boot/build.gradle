@@ -1,0 +1,88 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.4.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+apply plugin: 'org.springframework.boot'
+
+group 'world.sai.azkaban_samples'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+
+jar {
+    baseName = 'simple-spring-boot'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+
+bootRepackage {
+    mainClass = "world.sai.azkaban_samples.simple_spring_boot.SimpleSpringBootApplication"
+    enabled = true
+
+}
+
+springBoot {
+    executable = true
+}
+
+bootRun {
+    systemProperties = System.properties
+    addResources = true
+}
+
+gradle.taskGraph.beforeTask { Task task ->
+    println "executing $task ..."
+}
+
+gradle.taskGraph.afterTask { Task task, TaskState state ->
+    if (state.failure) {
+        println "FAILED"
+    }
+    else {
+        println "done"
+    }
+}
+
+assemble.doLast {
+    copy {
+        from 'build/libs'
+        into 'build/azkaban'
+        include '*.*'
+    }
+    copy {
+        from 'src/main/azkaban'
+        into 'build/azkaban'
+        include '*.*'
+    }
+
+    ant.zip(destfile: 'build/dist/simple-spring-boot.zip') {
+        fileset(dir: 'build/azkaban') {
+            include(name: '*.*')
+        }
+    }
+}
+

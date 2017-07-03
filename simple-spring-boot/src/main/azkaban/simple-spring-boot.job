@@ -1,0 +1,2 @@
+type=command
+command=java -jar simple-spring-boot-1.0-SNAPSHOT.jar
